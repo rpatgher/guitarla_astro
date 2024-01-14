@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Guitar from '../components/Guitar.astro';
+import Post from '../components/Post.astro';
+
+const urlGuitars = `${import.meta.env.PUBLIC_API_URL}/guitars?populate=image`;
+const urlPosts = `${import.meta.env.PUBLIC_API_URL}/posts?populate=image`;
+const urlCourse = `${import.meta.env.PUBLIC_API_URL}/course?populate=image`;
+
+const [resGuitars, resPosts, resCourse] = await Promise.all([
+	fetch(urlGuitars),
+	fetch(urlPosts),
+	fetch(urlCourse),
+]);
+const [guitarsData, postsData, courseData] = await Promise.all([
+	resGuitars.json(),
+	resPosts.json(),
+	resCourse.json()
+]);
+const { data: guitars } = guitarsData;
+const { data: posts } = postsData;
+const { attributes: course } = courseData.data;
+const courseImage = course.image.data.attributes.url;
+const image = `url(${courseImage})`;
+---
+<style define:vars={{image}}>
+	.course{
+		background-image: linear-gradient(to right, rgb(0 0 0 / .65), rgb(0 0 0 / .7)), var(--image);
+	}
+</style>
+<Layout title="Home" description="GuitarLA is a website for guitar lovers. We have a wide variety of guitars, accessories, and more.">
+	<main class="container">
+		<h1 class="heading">Our Collection</h1>
+        {guitars.length && (
+            <div class="grid">
+                {guitars.map(guitar => (
+                    <Guitar
+                        guitar={guitar?.attributes}
+                    />
+                ))}
+            </div>
+        )}
+	</main>
+	<section class="course">
+		<div class="course-grid container">
+			<div class="content">
+				<h2 class="heading">{course.title}</h2>
+				<p class="text">{course.content}</p>
+			</div>
+		</div>
+	</section>
+	<section class="container">
+		<h1 class="heading">Blog</h1>
+        <div class="grid">
+            {posts.map((post) => (
+                <Post
+                    post={post.attributes}
+                />
+            ))}
+        </div>
+	</section>
+</Layout>
+
+<style>
+	.course{
+		padding: 10rem 0;
+		margin-top: 10rem;
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+	@media (min-width: 768px){
+		.course-grid{
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.course .content{
+			grid-column: 2 / 3;
+		}
+	}
+	.course .text{
+		text-align: center;
+		font-size: 2.4rem;
+		color: var(--white);
+	}
+</style>

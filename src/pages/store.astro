@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Guitar from "../components/Guitar.astro";
+
+const url = `${import.meta.env.PUBLIC_API_URL}/guitars?populate=image`;
+const res = await fetch(url);
+const { data: guitars } = await res.json();
+---
+
+<Layout title="Store" description="GuitarLA is a website for guitar lovers. We have a wide variety of guitars, accessories, and more.">
+	<main class="container">
+		<h1 class="heading">Our Collection</h1>
+        {guitars.length && (
+            <div class="guitars-grid">
+                {guitars.map(guitar => (
+                    <Guitar
+                        guitar={guitar?.attributes}
+                    />
+                ))}
+            </div>
+        )}
+	</main>
+</Layout>
+
+
+<style>
+    .guitars-grid{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+    @media (min-width: 768px){
+        .guitars-grid{
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (min-width: 992px){
+        .guitars-grid{
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>

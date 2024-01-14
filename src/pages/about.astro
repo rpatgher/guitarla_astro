@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import image from '../img/nosotros.jpg';
+import { Image } from 'astro:assets';
+---
+
+<Layout title="About Us" description="GuitarLA is a website for guitar lovers. We have a wide variety of guitars, accessories, and more.">
+    <main class="container about">
+        <h2 class="heading">About Us</h2>
+        <div class="content">
+            <Image src={image} alt="About Us Image"  />
+            <div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat eveniet quod esse assumenda itaque tenetur dolorem! Voluptas, eveniet tenetur assumenda autem eos reprehenderit beatae nihil impedit nam placeat, laboriosam consequatur?</p>
+                <p>Veritatis, obcaecati eos mollitia vel animi nam temporibus itaque harum porro molestiae at! Placeat vero possimus impedit commodi, quaerat maiores. Quia dignissimos libero pariatur nostrum ut eligendi? Quasi ducimus vel repellat mollitia autem quas sint rerum sed exercitationem molestiae praesentium</p>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .about .content{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5rem;
+    }
+    @media (min-width: 768px){
+        .about .content{
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>

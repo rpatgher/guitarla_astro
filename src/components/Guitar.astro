@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+    guitar: {
+        name: string;
+        price: number;
+        description: string;
+        url: string;
+        image: {
+            data: {
+                attributes: {
+                    formats: {
+                        medium: {
+                            url: string;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+const { guitar } = Astro.props;
+const { name, price, description, image, url } = guitar;
+const imageUrl = image.data.attributes.formats.medium.url;
+---
+
+<div class="guitar">
+    <Image src={imageUrl} width={200} height={400} alt={`${name} Guitar Image`} />
+    <div class="content">
+        <h3>{name}</h3>
+        <p class="description">{description}</p>
+        <p class="price">${price}</p>
+
+        <a class="link" href={`/guitars/${url}`}>View Details</a>
+    </div>
+</div>
+
+<style>
+    .guitar{
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        gap: 1rem;
+        align-items: center;
+        max-width: 70rem;
+        margin: 0 auto;
+    }
+    .guitar .content{
+        padding: 1rem;
+    }
+    .guitar .content h3{
+        font-size: 3rem;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+    .guitar .description{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+        font-size: 1.8rem;
+    }
+    .guitar .price{
+        color: var(--primary);
+        font-size: 4rem;
+        margin: 0;
+        font-weight: 900;
+    }
+</style>

@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Post from "../components/Post.astro";
+
+const url = `${import.meta.env.PUBLIC_API_URL}/posts?populate=image`;
+const res = await fetch(url);
+const {data: posts} = await res.json();
+---
+
+<Layout title="Blog" description="GuitarLA is a website for guitar lovers. We have a wide variety of guitars, accessories, and more.">
+	<main class="container">
+		<h1 class="heading">Blog</h1>
+        <div class="blog">
+            {posts.map((post) => (
+                <Post
+                    post={post.attributes}
+                />
+            ))}
+        </div>
+	</main>
+</Layout>
+
+<style>
+    .blog{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+    @media (min-width: 768px){
+        .blog{
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (min-width: 992px){
+        .blog{
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    /* .post .content{
+        padding: 1.5rem;
+    } */
+</style>

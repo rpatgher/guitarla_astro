@@ -1,0 +1,109 @@
+---
+import Layout from '../../layouts/Layout.astro'
+
+export async function getStaticPaths(){
+    const url = `${import.meta.env.PUBLIC_API_URL}/guitars?populate=image`;
+    const res = await fetch(url);
+    const { data: guitars } = await res.json();
+    return guitars.map(guitar => ({
+        params: { id: guitar.attributes.url },
+        props: {
+            guitar: guitar.attributes
+        }
+    }));
+};
+const { guitar } = Astro.props;
+const { name, description, price, image } = guitar;
+const imageUrl = image.data.attributes.url;
+---
+<Layout title={name} description="GuitarLA is a website for guitar lovers. We have a wide variety of guitars, accessories, and more.">
+	<main class="container guitar">
+		<img class="image" src={imageUrl} alt={`${name} Guitar Image`} />
+            <div class="content">
+                <h3>{name}</h3>
+                <p class="text">{description}</p>
+                <p class="price">${price}</p>
+
+                <form
+                    class="form"
+                >
+                    <label for="amount">Amount</label>
+                    <select 
+                        name="amount" 
+                        id="amount"
+                    >
+                        <option value="0">--- Select ---</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+
+                    <input type="submit" value="Add to Cart" />
+                </form>
+            </div>
+	</main>
+</Layout>
+
+<style>
+    .guitar{
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        gap: 1rem;
+        align-items: center;
+        max-width: 70rem;
+        margin: 0 auto;
+    }
+    .guitar .content{
+        padding: 1rem;
+    }
+    .guitar .content h3{
+        font-size: 3rem;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+    .guitar .description{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        overflow: hidden;
+        font-size: 1.8rem;
+    }
+    .guitar .price{
+        color: var(--primary);
+        font-size: 4rem;
+        margin: 0;
+        font-weight: 900;
+    }
+
+    .form{
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+    .form label{
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+    .form select{
+        text-align: center;
+        padding: 1rem;
+        border: 1px solid var(--black);
+        border-radius: 1rem;
+    }
+    .form input[type="submit"]{
+        margin-top: 3rem;
+        background-color: var(--black);
+        color: var(--white);
+        text-transform: uppercase;
+        padding: 1.4rem;
+        border: none;
+        font-weight: 700;  
+        transition: background-color .3s ease; 
+    }
+    .form input[type="submit"]:hover{
+        background-color: var(--primary);
+        cursor: pointer;
+    }
+</style>
